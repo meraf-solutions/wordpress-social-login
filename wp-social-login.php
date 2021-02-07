@@ -100,8 +100,24 @@ defined( 'WORDPRESS_SOCIAL_LOGIN_ABS_PATH' )
 defined( 'WORDPRESS_SOCIAL_LOGIN_PLUGIN_URL' )
 	|| define( 'WORDPRESS_SOCIAL_LOGIN_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
-defined( 'WORDPRESS_SOCIAL_LOGIN_HYBRIDAUTH_ENDPOINT_URL' )
-	|| define( 'WORDPRESS_SOCIAL_LOGIN_HYBRIDAUTH_ENDPOINT_URL', WORDPRESS_SOCIAL_LOGIN_PLUGIN_URL . 'hybridauth/' );
+    //Include Hide My WP Premium compatibility for the plugin new URL
+    if(in_array('hide-my-wp/index.php', apply_filters('active_plugins', get_option('active_plugins')))){ 
+        //plugin HMWP is activated
+        
+        //retrieve the new WSL ABS path
+        $arr = HMWP_Classes_Tools::getOption( 'hmwp_plugins' )['from'];
+        $key = array_search ('wordpress-social-login/', $arr);
+        $new_WSL_url_1 =  HMWP_Classes_Tools::getOption( 'hmwp_plugin_url' );
+        $new_WSL_url_2 =  HMWP_Classes_Tools::getOption( 'hmwp_plugins' )['to'][$key];
+        $new_WSL_url = site_url( '/', 'https' ) . $new_WSL_url_1 . '/' . $new_WSL_url_2 . '/hybridauth/'; 
+   
+        defined( 'WORDPRESS_SOCIAL_LOGIN_HYBRIDAUTH_ENDPOINT_URL' )
+        || define("WORDPRESS_SOCIAL_LOGIN_HYBRIDAUTH_ENDPOINT_URL", $new_WSL_url);
+        
+    } else {
+      defined( 'WORDPRESS_SOCIAL_LOGIN_HYBRIDAUTH_ENDPOINT_URL' )
+    	|| define( 'WORDPRESS_SOCIAL_LOGIN_HYBRIDAUTH_ENDPOINT_URL', WORDPRESS_SOCIAL_LOGIN_PLUGIN_URL . 'hybridauth/' );       
+    }
 
 // --------------------------------------------------------------------
 
